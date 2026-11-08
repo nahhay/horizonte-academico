@@ -56,7 +56,7 @@ public class Corretor implements Analise {
         etapas.add(new Etapa(imovel.isAluguel() ? "Valor do aluguel" : "Simulacao de credito", true,
                 "Parcela mensal de " + moeda(parcela)));
 
-        boolean cabe = parcela <= limite;
+        boolean cabe = imovel.isAluguel() ? parcela <= limite : cliente.getRenda() >= Math.round((parcela / Simulacao.LIMITE) * 100) / 100.0;
         etapas.add(new Etapa("Analise financeira", cabe, "Limite da renda: " + moeda(limite)));
 
         etapas.add(new Etapa("Consolidacao", cabe, cabe ? "Aprovado" : "Reprovado"));
