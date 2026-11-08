@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Horizonte Imóveis</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-pagina="site">
+    <header class="topo">
+      <div class="wrap">
+        <a class="logo" href="#">Horizonte</a>
+        <nav>
+          <a href="#imoveis">Imóveis</a><a href="#simulacao">Simulação</a
+          ><a href="#servicos">Serviços</a><a href="#sobre">Sobre</a
+          ><a href="#contato">Contato</a>
+        </nav>
+        <a class="btn" href="sistema.html">Área do corretor</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Bons endereços, novas possibilidades</p>
+          <h1>Um lugar para viver.<br />Encontre seu imóvel dos sonhos.</h1>
+          <p>
+            Intermediamos o seu sonho e transformamos imóveis em lares,
+            conectando você ao endereço que faz sentido para a sua vida.
+          </p>
+          <a class="btn dark" href="#imoveis">Ver imóveis</a
+          ><a class="btn" href="#simulacao">Simule agora</a>
+        </div>
+      </section>
+
+      <section id="imoveis">
+        <div class="wrap">
+          <div class="abas">
+            <button class="aba on" data-f="Comprar">Comprar</button
+            ><button class="aba" data-f="Alugar">Alugar</button>
+          </div>
+          <div class="filtros">
+            <div>
+              <label for="f-bairro">Onde você quer morar?</label
+              ><select id="f-bairro"></select>
+            </div>
+            <div>
+              <label for="f-tipo">Tipo de imóvel</label
+              ><select id="f-tipo">
+                <option value="">Todos os tipos</option>
+                <option>Casa</option>
+                <option>Apartamento</option>
+                <option>Terreno</option>
+              </select>
+            </div>
+            <div>
+              <label for="f-ordem">Ordenar por</label
+              ><select id="f-ordem">
+                <option value="menor">Menor preço</option>
+                <option value="maior">Maior preço</option>
+                <option value="area">Maior área</option>
+              </select>
+            </div>
+          </div>
+          <div class="lista-info">
+            <h2>Imóveis em Campo Grande</h2>
+            <span class="mut" id="total"></span>
+          </div>
+          <div class="grade" id="lista"></div>
+        </div>
+      </section>
+
+      <section id="simulacao" class="fundo-claro">
+        <div class="wrap">
+          <p class="eyebrow">Simulação rápida</p>
+          <h2>Simule o seu financiamento</h2>
+          <form class="sim" id="simulador">
+            <div class="card">
+              <p class="mut sim-dica">
+                Informe o valor do imóvel e sua renda para ver se a parcela cabe
+                no seu bolso.
+              </p>
+              <div class="campo">
+                <label for="s-imovel">Valor do imóvel</label
+                ><input
+                  id="s-imovel"
+                  inputmode="decimal"
+                  placeholder="R$ 300.000,00"
+                  value="300000"
+                />
+              </div>
+              <div class="campo">
+                <label for="s-renda">Renda mensal</label
+                ><input
+                  id="s-renda"
+                  inputmode="decimal"
+                  placeholder="R$ 8.000,00"
+                  value="8000"
+                />
+              </div>
+              <button class="btn dark" type="submit">Simular</button>
+              <p class="mut sim-nota">
+                Simulação PRICE: 20% de entrada, 360 meses, juros de 0,8% ao mês
+                e parcela de até 30% da renda.
+              </p>
+            </div>
+            <div class="tiles" id="resultado"></div>
+          </form>
+        </div>
+      </section>
+
+      <section id="servicos">
+        <div class="wrap">
+          <p class="eyebrow">O que fazemos?</p>
+          <h2>Mais clareza em cada etapa.</h2>
+          <div class="tres">
+            <div>
+              <span>01</span>
+              <h3>Comprar e alugar bem</h3>
+              <p class="mut">
+                Escuta atenta e uma equipe de corretores que respeita seu
+                momento, da primeira visita à entrega das chaves.
+              </p>
+            </div>
+            <div>
+              <span>02</span>
+              <h3>Vender seu imóvel</h3>
+              <p class="mut">
+                Divulgação, avaliação e negociação criteriosa para valorizar o
+                que seu imóvel tem de melhor.
+              </p>
+            </div>
+            <div>
+              <span>03</span>
+              <h3>Administrar com cuidado</h3>
+              <p class="mut">
+                Cuidamos dos contratos, dos repasses e da relação com o
+                inquilino, com eficiência e segurança.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sobre" class="fundo-claro">
+        <div class="wrap">
+          <p class="eyebrow">Quem somos?</p>
+          <h2>Antes de imóveis, entendemos de pessoas.</h2>
+          <p class="mut sobre-texto">
+            Somos uma imobiliária independente em Campo Grande. Unimos
+            conhecimento de ponta a ponta e sabemos que decidir alugar, comprar
+            ou vender um imóvel é um grande passo. Por isso estamos aqui para
+            tornar esse processo mais simples, fácil e seguro.
+          </p>
+          <div class="stats">
+            <div><b>14</b>anos de experiência</div>
+            <div><b>+960</b>histórias conectadas</div>
+            <div><b>14</b>bairros que conhecemos</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="rodape" id="contato">
+      <div class="wrap">
+        <div>
+          <b>(00) 00000-0000</b><br />email@gmail.com<br /><span
+            >segunda a sexta, das 8h às 17h</span
+          >
+        </div>
+        <p>
+          Conte o que você procura. Nossa equipe entra em contato em até um dia
+          útil, com atenção a cada detalhe.
+        </p>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
