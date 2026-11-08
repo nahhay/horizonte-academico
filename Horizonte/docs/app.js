@@ -73,7 +73,7 @@ const limpar = (s) => String(s).replace(/\D/g, "");
 
 const API = location.hostname === "localhost" || location.hostname === "127.0.0.1"
   ? "http://localhost:8080"
-  : "https://SEU-SERVICO.onrender.com";
+  : "https://servico.onrender.com";
 
 async function enviar(rota, dados) {
   let resposta;
