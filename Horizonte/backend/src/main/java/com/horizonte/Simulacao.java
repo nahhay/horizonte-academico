@@ -17,7 +17,7 @@ public class Simulacao {
         this.parcela = financiado * JUROS / (1 - Math.pow(1 + JUROS, -PRAZO));
         if(!Double.isFinite(parcela) || !Double.isFinite(parcela / LIMITE))
             throw new IllegalArgumentException("Valor muito alto para calcular o financiamento");
-        this.cabe = parcela <= renda * LIMITE;
+        this.cabe = renda >= Math.round((parcela / LIMITE) * 100) / 100.0;
     }
     public double getValor(){return valor;}
     public double getEntrada(){return entrada;}
