@@ -1,5 +1,5 @@
 package com.horizonte;
-
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +19,13 @@ public class Api {
     public record DadosCliente(String nome, String cpf, double renda, int imovel) {}
 
     public record DadosAnalise(DadosCliente cliente, DadosImovel imovel, int protocolo) {}
-
+    @GetMapping("/")
+    public ResponseEntity<Void> inicio() {
+        return ResponseEntity.status(302)
+                .location(URI.create("https://nahhay.github.io/horizonte-academico/index.html"))
+                .build();
+    }
+    
     @GetMapping("/api/saude")
     public Map<String, String> saude() {
         return Map.of("status", "ok");
