@@ -74,6 +74,18 @@ public class Api {
     @PostMapping("/api/imoveis")
     public synchronized Imovel cadastrarImovel(@RequestBody DadosImovel dados) {
         Imovel novo = imovel(dados, imoveis.listar().size() + 1);
+        for (Imovel i : imoveis.listar()) {
+            if (i.getEndereco().equalsIgnoreCase(novo.getEndereco())
+                    && i.getBairro().equalsIgnoreCase(novo.getBairro())
+                    && i.getTipo().equals(novo.getTipo())
+                    && i.getFinalidade().equals(novo.getFinalidade())
+                    && i.getQuartos() == novo.getQuartos()
+                    && i.getBanheiros() == novo.getBanheiros()
+                    && Double.compare(i.getArea(), novo.getArea()) == 0
+                    && Double.compare(i.getPreco(), novo.getPreco()) == 0) {
+                throw new IllegalArgumentException("Imovel ja cadastrado");
+            }
+        }
         imoveis.adicionar(novo);
         return novo;
     }
