@@ -8,5 +8,7 @@ public class Repositorio<T>{
     public void adicionar(T item){itens.add(item);}
     public void remover(T item){itens.remove(item);}
 
+    public void limpar() {itens.clear();}
+
     public List<T> listar() {return new ArrayList<>(itens);}
 }
