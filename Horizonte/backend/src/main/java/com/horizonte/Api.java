@@ -1,3 +1,41 @@
+
+package com.horizonte;
+
+import java.net.URI;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@CrossOrigin(originPatterns = { "https://*.github.io", "http://localhost:*", "http://127.0.0.1:*" })
+public class Api {
+    public record DadosImovel(String endereco, String bairro, String tipo, String finalidade,
+            int quartos, int banheiros, double area, double preco) {
+    }
+
+    public record DadosCliente(String nome, String cpf, double renda, int imovel) {
+    }
+
+    public record DadosAnalise(String cpf, int codigo) {
+    }
+
+    private final Repositorio<Imovel> imoveis = new Repositorio<>();
+    private final Repositorio<Cliente> clientes = new Repositorio<>();
+    private final Corretor corretor = new Corretor();
+
+    @GetMapping("/")
     public ResponseEntity<Void> inicio() {
         return ResponseEntity.status(302)
                 .location(URI.create("https://nahhay.github.io/horizonte-academico/index.html"))
@@ -17,17 +55,19 @@
     @GetMapping("/api/dados")
     public synchronized Map<String, Object> dados() {
         return Map.of("imoveis", imoveis.listar(),
-                      "clientes", clientes.listar());
+                "clientes", clientes.listar());
     }
 
     private Imovel imovel(DadosImovel dados, int id) {
-        if (dados == null) throw new IllegalArgumentException("Informe o imovel");
+        if (dados == null)
+            throw new IllegalArgumentException("Informe o imovel");
         return new Imovel(id, dados.endereco(), dados.bairro(), dados.tipo(),
                 dados.quartos(), dados.banheiros(), dados.area(), dados.preco(), dados.finalidade());
     }
 
     private Cliente cliente(DadosCliente dados) {
-        if (dados == null) throw new IllegalArgumentException("Informe o cliente");
+        if (dados == null)
+            throw new IllegalArgumentException("Informe o cliente");
         return new Cliente(dados.nome(), dados.cpf(), dados.renda(), dados.imovel());
     }
 
@@ -40,18 +80,20 @@
 
     @DeleteMapping("/api/imoveis/{id}")
     public synchronized Map<String, String> removerImovel(@PathVariable int id) {
-        Imovel removido = imoveis.listar().stream().filter(i -> i.getId() == id).findFirst()
+        Imovel removido = imoveis.listar().stream()
+                .filter(i -> i.getId() == id).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Imovel nao encontrado"));
         imoveis.remover(removido);
 
-            List<Imovel> ordem = new ArrayList<>();
+        List<Imovel> ordem = new ArrayList<>();
         for (Imovel i : imoveis.listar()) {
             ordem.add(new Imovel(ordem.size() + 1, i.getEndereco(), i.getBairro(),
                     i.getTipo(), i.getQuartos(), i.getBanheiros(), i.getArea(),
                     i.getPreco(), i.getFinalidade()));
         }
         imoveis.limpar();
-        for (Imovel i : ordem) imoveis.adicionar(i);
+        for (Imovel i : ordem)
+            imoveis.adicionar(i);
 
         List<Cliente> novos = new ArrayList<>();
         for (Cliente c : clientes.listar()) {
@@ -62,7 +104,9 @@
             novos.add(copia);
         }
         clientes.limpar();
-        for (Cliente c : novos) clientes.adicionar(c);
+        for (Cliente c : novos)
+            clientes.adicionar(c);
+
         return Map.of("status", "ok");
     }
 
@@ -71,7 +115,8 @@
         Cliente novo = cliente(dados);
         if (clientes.listar().stream().anyMatch(c -> c.getCpf().equals(novo.getCpf())))
             throw new IllegalArgumentException("CPF ja cadastrado");
-        if (novo.getImovel() != 0 && imoveis.listar().stream().noneMatch(i -> i.getId() == novo.getImovel()))
+        if (novo.getImovel() != 0 && imoveis.listar().stream()
+                .noneMatch(i -> i.getId() == novo.getImovel()))
             throw new IllegalArgumentException("Imovel nao encontrado");
         clientes.adicionar(novo);
         return novo;
@@ -99,7 +144,8 @@
                 "cabe", s.isCabe(), "rendaNecessaria", rendaMinima,
                 "entradaPercentual", Simulacao.ENTRADA * 100,
                 "limitePercentual", Simulacao.LIMITE * 100,
-                "taxaMensal", Simulacao.JUROS * 100, "taxaAnual", s.getTaxaAnual());
+                "taxaMensal", Simulacao.JUROS * 100,
+                "taxaAnual", s.getTaxaAnual());
     }
 
     @PostMapping("/api/analisar")
@@ -107,9 +153,11 @@
         if (dados == null || dados.cpf() == null)
             throw new IllegalArgumentException("Informe o cliente e o imovel");
         String cpf = dados.cpf().replaceAll("\\D", "");
-        Cliente c = clientes.listar().stream().filter(x -> x.getCpf().equals(cpf)).findFirst()
+        Cliente c = clientes.listar().stream()
+                .filter(x -> x.getCpf().equals(cpf)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Cliente nao encontrado"));
-        Imovel i = imoveis.listar().stream().filter(x -> x.getId() == dados.codigo()).findFirst()
+        Imovel i = imoveis.listar().stream()
+                .filter(x -> x.getId() == dados.codigo()).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Imovel nao encontrado"));
         Resultado resultado = corretor.analisar(c, i);
         return Map.of("resultado", resultado, "status", c.getStatus());
