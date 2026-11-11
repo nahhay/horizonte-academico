@@ -308,6 +308,10 @@ async function iniciar() {
   $("dlg-cliente").querySelector("form").onsubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
+    if (form.dataset.enviando === "sim") return;
+    form.dataset.enviando = "sim";
+    const botao = form.querySelector('[type="submit"]');
+    if (botao) botao.disabled = true;
     try {
       await pedido("/api/clientes", "POST", {
         nome: $("c-nome").value.trim(),
@@ -321,11 +325,19 @@ async function iniciar() {
       aviso("");
     } catch (erro) {
       form.querySelector(".erro").textContent = erro.message;
+    } finally {
+      delete form.dataset.enviando;
+      if (botao) botao.disabled = false;
     }
   };
   $("dlg-imovel").querySelector("form").onsubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
+    if (form.dataset.enviando === "sim") return;
+    form.dataset.enviando = "sim";
+    const botao = form.querySelector('[type="submit"]');
+    if (botao) botao.disabled = true;
+
     try {
       await pedido("/api/imoveis", "POST", {
         endereco: $("i-endereco").value.trim(),
@@ -343,6 +355,9 @@ async function iniciar() {
       aviso("");
     } catch (erro) {
       form.querySelector(".erro").textContent = erro.message;
+    } finally {
+      delete form.dataset.enviando;
+      if (botao) botao.disabled = false;
     }
   };
   $("a-cliente").onchange = () => {
