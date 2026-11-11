@@ -16,6 +16,7 @@ const valor = (s) => {
     .replace(/[^\d,.-]/g, "");
   if (!s) return NaN;
   if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".");
+  else if (/^-?\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, "");
   return Number(s);
 };
 const limpar = (s) => String(s ?? "").replace(/\D/g, "");
@@ -31,9 +32,7 @@ async function pedido(caminho, metodo = "GET", dados) {
       body: dados === undefined ? undefined : JSON.stringify(dados),
     });
   } catch (_) {
-    throw Error(
-      "Não foi possível acessar a API. Verifique sua conexão e o Render.",
-    );
+    throw Error("Não foi possível conectar ao servidor. Tente novamente.");
   }
   const tipo = resposta.headers.get("content-type") || "";
   const corpo = tipo.includes("application/json")
@@ -107,13 +106,19 @@ async function iniciarSite() {
         `<div class="tile ${classe}"><small>${nome}</small><b>${v}</b></div>`;
       $("resultado").innerHTML =
         tile("Valor do imóvel", moeda(preco)) +
-        tile("Entrada mínima (20%)", moeda(s.entrada)) +
+        tile("Entrada (" + s.entradaPercentual + "%)", moeda(s.entrada)) +
         tile("Valor financiado", moeda(s.financiado)) +
         tile("Primeira parcela (PRICE)", moeda(s.parcela)) +
         tile("Prazo", s.prazo + " meses") +
-        tile("Taxa", "0,8% a.m. (aprox. 10,03% a.a.)") +
         tile(
-          "Comprometimento de renda (limite 30%)",
+          "Taxa",
+          s.taxaMensal.toLocaleString("pt-BR") +
+            "% a.m. (" +
+            s.taxaAnual.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) +
+            "% a.a.)",
+        ) +
+        tile(
+          "Comprometimento de renda (limite " + s.limitePercentual + "%)",
           s.cabe
             ? "Cabe na sua renda"
             : "Renda necessária: " + moeda(s.rendaNecessaria),
@@ -125,7 +130,7 @@ async function iniciarSite() {
     }
   };
   try {
-    await carregar();
+    banco.imoveis = await pedido("/api/imoveis");
     listar();
     $("simulador").requestSubmit();
   } catch (erro) {
@@ -285,9 +290,17 @@ async function iniciar() {
         ? "Valor do aluguel mensal (R$)"
         : "Preço de venda (R$)");
   $("i-fin").onchange = rotulo;
+  $("i-tipo").onchange = () => {
+    const minimo = $("i-tipo").value === "Terreno" ? 0 : 1;
+    for (const id of ["i-quartos", "i-banheiros"]) {
+      $(id).min = minimo;
+      if (Number($(id).value) < minimo) $(id).value = minimo;
+    }
+  };
   $("novo-imovel").onclick = () => {
     abrir("dlg-imovel");
     rotulo();
+    $("i-tipo").onchange();
   };
   document
     .querySelectorAll("[data-fechar]")
@@ -315,7 +328,6 @@ async function iniciar() {
     const form = e.currentTarget;
     try {
       await pedido("/api/imoveis", "POST", {
-        id: 0,
         endereco: $("i-endereco").value.trim(),
         bairro: $("i-bairro").value.trim(),
         tipo: $("i-tipo").value,
