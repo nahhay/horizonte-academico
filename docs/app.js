@@ -79,8 +79,7 @@ async function iniciarSite() {
     if (ordem === "area") lista.sort((a, b) => b.area - a.area);
     $("total").textContent =
       lista.length +
-      " imóvel" +
-      (lista.length === 1 ? " encontrado" : "s encontrados");
+      (lista.length === 1 ? " imóvel encontrado" : " imóveis encontrados");
     $("lista").innerHTML =
       lista.map((i) => card(i)).join("") ||
       '<p class="vazio">Nenhum imóvel com esses filtros.</p>';
