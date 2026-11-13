@@ -339,7 +339,7 @@ A aplicação expõe as rotas abaixo por meio de `Api.java`.
   "endereco": "Rua Exemplo, 100",
   "bairro": "Centro",
   "tipo": "Casa",
-  "finalidade": "Venda",
+  "finalidade": "Comprar",
   "quartos": 3,
   "banheiros": 2,
   "area": 120,
