@@ -1,7 +1,7 @@
 # Horizonte — Sistema Imobiliário
 
 <p align="center">
-  <img src="banner.png" alt="Banner Horizonte" width="100%">
+  <img src="docs/img/banner.png" alt="Banner Horizonte" width="100%">
 </p>
 
 
